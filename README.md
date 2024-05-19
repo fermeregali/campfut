@@ -1,7 +1,3 @@
-Sure! Here's a comprehensive and creative README for your GitHub repository:
-
----
-
 # Team Search API with PHP and MySQL
 
 Welcome to the **Team Search API** project! This repository contains a basic example of an API built with PHP and MySQL,
