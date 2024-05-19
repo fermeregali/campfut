@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Form</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Optional CSS for styling -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Team Search</h1>
+    
+    <div>
+        <input type="text" id="txtBusca" placeholder="Buscar Times">
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Stadium</th>
+                <th>Capacity</th>
+                <th>Winning Titles</th>
+            </tr>
+        </thead>
+        <tbody id="resultado">
+            
+        </tbody>
+    </table>
+
+    <script>
+        $('#txtBusca').keyup(function(){
+            let busca = {
+                "busca": $("#txtBusca").val(),
+            }
+
+            busca = JSON.stringify(busca); // convert to string
+
+            $.post("http://localhost/campfut/backend/clube/", busca, function(resposta) {
+               //console.log(resposta);
+
+               let data;
+                try {
+                    data = typeof resposta === 'string' ? JSON.parse(resposta) : resposta;
+                } catch (e) {
+                    console.error("Erro ao analisar resposta JSON:", e);
+                    return;
+                }
+
+                //console.log("Resposta analisada:", data);
+                let tabelaDeClubes = '';
+                if (data.result) {
+                    if (Array.isArray(data.valores)) {
+                        data.valores.forEach(clube => {
+                        //console.log(clube);
+                        tabelaDeClubes +=  `<tr>
+                                                <td>${clube.nome}</td>
+                                                <td>${clube.estadio}</td>
+                                                <td>${clube.capacidade_estadio}</td>
+                                                <td>${clube.num_titulos}</td>
+                                            </tr> `
+                    });
+                    $('#resultado').html(tabelaDeClubes);
+
+                    } else {
+                        console.error("A propriedade 'valores' não é um array:", data.valores);
+                    }
+                } else {
+                    console.warn("Resultado não encontrado ou 'result' é falso.");
+                }
+
+                
+            });
+        });
+    </script>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>
